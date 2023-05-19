@@ -4,7 +4,9 @@
 #ifdef C_LION
 
 #include <cstdint>
+#else
 
+#include <Arduino.h>
 #endif
 
 #include "ship.h"

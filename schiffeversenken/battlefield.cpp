@@ -9,6 +9,7 @@ Battlefield::Battlefield() : _positions(12 * 12), _size(12), _placedShips(0) {
 
 Battlefield::Battlefield(uint8_t size) : _positions(size * size), _size(size), _placedShips(0) {
     _battleground = new uint8_t[_positions];
+    for(int i=0;i<_positions;_battleground[i++]=0);
     for(auto i=0; i<SHIP_COUNT; _ships[i++]=nullptr);
 }
 

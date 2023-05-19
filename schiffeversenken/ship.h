@@ -5,6 +5,9 @@
 
 #include <cstdint>
 
+#else
+
+#include <Arduino.h>
 #endif
 
 enum Direction {
