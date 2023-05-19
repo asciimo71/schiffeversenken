@@ -25,15 +25,19 @@ void setup() {
   matrix->setBrightness(40);
   matrix->setTextWrap(false);
 
+  /*
   matrix->print(bf->setShip(*new Ship(2, 2, 5, HORIZONTAL)));
   matrix->print(bf->setShip(*new Ship(6, 15, 4, VERTICAL)));
   matrix->println(bf->setShip(*new Ship(10, 12, 3, HORIZONTAL)));
   matrix->print(bf->setShip(*new Ship(1, 8, 3, VERTICAL)));
   matrix->print(bf->setShip(*new Ship(15, 4, 2, HORIZONTAL)));
+  */
+
+  bf->setRandomShips();
 
   matrix->show();
 
-  delay(1000);
+  //delay(1000);
 
   dumpBoard();
 }

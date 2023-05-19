@@ -4,9 +4,19 @@
 #ifdef C_LION
 
 #include <cstdint>
+#include <cstdlib>
+#include <ctime>
+
+#define SRAND() std::srand(static_cast<unsigned int>(std::time(nullptr)))
+#define RAND(x) (std::rand() % x)
+
 #else
 
 #include <Arduino.h>
+
+#define SRAND() randomSeed(millis() * analogRead(0))
+#define RAND(x) random(x)
+
 #endif
 
 #include "ship.h"
@@ -21,6 +31,7 @@ public:
 
     ~Battlefield();
 
+    void setRandomShips();
     bool setShip(Ship &ship);
 
     uint8_t *battleground();

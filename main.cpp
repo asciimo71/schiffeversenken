@@ -5,7 +5,12 @@
 int main() {
     std::cout << "Hello, World!" << std::endl;
 
-    Battlefield bf = Battlefield(10);
+    Battlefield bf = Battlefield(16);
+    bf.setRandomShips();
+    std::cout << bf.string();
+
+/*
+    bf = Battlefield(12);
     std::cout << "place ship HORIZONTALLY " << 0 << ", " << 0 << " size 5: (true) == "
     << bf.setShip(*new Ship(0, 0, 5, HORIZONTAL)) << std::endl << bf.string();
     std::cout << "place ship HORIZONTALLY " << 0 << ", " << 5 << " size 5: (true) == "
@@ -31,6 +36,7 @@ int main() {
     for(auto i=0; i<100; i++) {
         std::cout << (char)(area[i] ? area[i] : '_');
     }
+*/
     std::cout << std::endl;
     return 0;
 }

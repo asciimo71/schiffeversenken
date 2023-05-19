@@ -99,4 +99,14 @@ char *Battlefield::string() {
     return str;
 }
 
+void Battlefield::setRandomShips() {
+    SRAND();
+
+    while(!setShip(*new Ship(RAND(_size), RAND(_size), 5, RAND(2) ? HORIZONTAL : VERTICAL)));
+    while(!setShip(*new Ship(RAND(_size), RAND(_size), 4, RAND(2) ? HORIZONTAL : VERTICAL)));
+    while(!setShip(*new Ship(RAND(_size), RAND(_size), 3, RAND(2) ? HORIZONTAL : VERTICAL)));
+    while(!setShip(*new Ship(RAND(_size), RAND(_size), 3, RAND(2) ? HORIZONTAL : VERTICAL)));
+    while(!setShip(*new Ship(RAND(_size), RAND(_size), 2, RAND(2) ? HORIZONTAL : VERTICAL)));
+}
+
 
