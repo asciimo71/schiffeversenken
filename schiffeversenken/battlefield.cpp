@@ -1,7 +1,5 @@
 #include "battlefield.h"
 
-#include <string.h>
-
 Battlefield::Battlefield() : _positions(12 * 12), _size(12), _placedShips(0) {
     _battleground = new uint8_t[_positions];
     for(auto i=0; i< sizeof(_ships); _ships[i++]=nullptr);
@@ -76,6 +74,10 @@ bool Battlefield::shipMatchesHorizontal(Ship &ship) {
 
 bool Battlefield::shipMatchesVertical(Ship &ship) {
     if (ship.row() + ship.size() > _size) return false;
+    if(ship.row())
+    if(ship.col()>0) {
+
+    }
     for (uint8_t i = 0; i < ship.size(); i++) {
         if (_battleground[(ship.row() + i) * _size + ship.col()]) return false;
     }
@@ -102,11 +104,11 @@ char *Battlefield::string() {
 void Battlefield::setRandomShips() {
     SRAND();
 
-    while(!setShip(*new Ship(RAND(_size), RAND(_size), 5, RAND(2) ? HORIZONTAL : VERTICAL)));
-    while(!setShip(*new Ship(RAND(_size), RAND(_size), 4, RAND(2) ? HORIZONTAL : VERTICAL)));
-    while(!setShip(*new Ship(RAND(_size), RAND(_size), 3, RAND(2) ? HORIZONTAL : VERTICAL)));
-    while(!setShip(*new Ship(RAND(_size), RAND(_size), 3, RAND(2) ? HORIZONTAL : VERTICAL)));
-    while(!setShip(*new Ship(RAND(_size), RAND(_size), 2, RAND(2) ? HORIZONTAL : VERTICAL)));
+    while(!setShip(*new Ship(RAND(_size), RAND(_size), 5, RAND(2) ? HORIZONTAL : VERTICAL, _size)));
+    while(!setShip(*new Ship(RAND(_size), RAND(_size), 4, RAND(2) ? HORIZONTAL : VERTICAL, _size)));
+    while(!setShip(*new Ship(RAND(_size), RAND(_size), 3, RAND(2) ? HORIZONTAL : VERTICAL, _size)));
+    while(!setShip(*new Ship(RAND(_size), RAND(_size), 3, RAND(2) ? HORIZONTAL : VERTICAL, _size)));
+    while(!setShip(*new Ship(RAND(_size), RAND(_size), 2, RAND(2) ? HORIZONTAL : VERTICAL, _size)));
 }
 
 

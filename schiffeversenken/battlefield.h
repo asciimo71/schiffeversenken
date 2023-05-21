@@ -19,6 +19,9 @@
 
 #endif
 
+#include <string.h>
+
+#include "point.h"
 #include "ship.h"
 
 #define SHIP_COUNT 5
