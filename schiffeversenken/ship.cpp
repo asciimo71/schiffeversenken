@@ -80,12 +80,12 @@ uint8_t Ship::id() const {
 }
 
 void Ship::initBoundingBox() {
-    const int shipWidth = _direction == HORIZONTAL ? _size : 0;
-    const int shipHeight = _direction == VERTICAL ? _size : 0;
-    uint8_t top = 0 > _col - 1 ? 0 : _col - 1;
-    uint8_t left = 0 > _row - 1 ? 0 : _row - 1;
-    uint8_t bottom = _maxSize > shipHeight + 1 ? _maxSize : shipHeight + 1;
-    uint8_t right = _maxSize > shipWidth + 1 ? 0 : shipWidth + 1;
+    const int shipRight = _col + (_direction == HORIZONTAL ? _size - 1 : 0);
+    const int shipBottom = _row + (_direction == VERTICAL ? _size - 1 : 0);
+    uint8_t left = (_col - 1 < 0) ? 0 : _col - 1;
+    uint8_t top = (_row - 1 < 0) ? 0 : _row - 1;
+    uint8_t right = shipRight + 1 >= _maxSize ? _maxSize - 1 : shipRight + 1;
+    uint8_t bottom = shipBottom + 1 >= _maxSize ? _maxSize - 1 : shipBottom + 1;
 
     _boundingBox = new Point[]{
             {left,  top},
@@ -93,13 +93,41 @@ void Ship::initBoundingBox() {
     };
     _shipBox = new Point[]{
             {_col,                            _row},
-            {static_cast<uint8_t>(shipWidth), static_cast<uint8_t>(shipHeight)}
+            {static_cast<uint8_t>(shipRight), static_cast<uint8_t>(shipBottom)}
     };
 }
 
 bool Ship::overlaps(Ship *other) {
-    return other->_shipBox[BotRight].row >= _boundingBox[TopLeft].row
-           && other->_shipBox[BotRight].col >= _boundingBox[TopLeft].col
-           && other->_shipBox[TopLeft].row <= _boundingBox[BotRight].row
-           && other->_shipBox[TopLeft].col <= _boundingBox[BotRight].col;
+    auto overlap = other->_shipBox[BotRight].row >= _boundingBox[TopLeft].row
+                   && other->_shipBox[BotRight].col >= _boundingBox[TopLeft].col
+                   && other->_shipBox[TopLeft].row <= _boundingBox[BotRight].row
+                   && other->_shipBox[TopLeft].col <= _boundingBox[BotRight].col;
+
+    return overlap;
+}
+
+Ship *Ship::create(uint8_t row, uint8_t col, uint8_t size, Direction direction, uint8_t maxSize) {
+    auto optShip = new Ship(row, col, size, direction, maxSize);
+    if (optShip->_shipBox[BotRight].row >= maxSize || optShip->_shipBox[BotRight].col >= maxSize)
+        return nullptr;
+    else
+        return optShip;
+}
+
+Point *Ship::shipBox() {
+    return new Point[2]{
+            {_shipBox[0].col, _shipBox[0].row},
+            {_shipBox[1].col, _shipBox[1].row}
+    };
+}
+
+bool Ship::damageAt(uint8_t col, uint8_t row) {
+    uint8_t dIdx;
+    if(isVertical()) {
+        dIdx = row - _row;
+    }
+    else {
+        dIdx = col - _col;
+    }
+    return damaged[dIdx];
 }

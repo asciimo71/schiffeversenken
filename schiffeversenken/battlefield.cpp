@@ -26,36 +26,31 @@ Battlefield::~Battlefield() {
  */
 
 
-bool Battlefield::setShip(Ship &ship) {
+bool Battlefield::setShip(Ship *ship) {
+    if(ship == nullptr) return false;
     if(isComplete()) return false;
+    if (shipDoesOverlap(ship)) return false;
 
-    bool success = ship.isHorizontal()
+    ship->setId('0' + _placedShips);
+    ship->isHorizontal()
            ? placeShipHorizontal(ship)
            : placeShipVertical(ship);
 
-    if( success ) {
-        _ships[_placedShips++] = &ship;
-    }
+    _ships[_placedShips++] = ship;
 
-    return success;
-}
-
-bool Battlefield::placeShipHorizontal(Ship &ship) {
-    if (!shipMatchesHorizontal(ship)) return false;
-    ship.setId('0' + _placedShips);
-    for (uint8_t i = 0; i < ship.size(); i++) {
-        _battleground[ship.row() * _size + ship.col() + i] = ship.id();
-    }
     return true;
 }
 
-bool Battlefield::placeShipVertical(Ship &ship) {
-    if (!shipMatchesVertical(ship)) return false;
-    ship.setId('0' + _placedShips);
-    for (uint8_t i = 0; i < ship.size(); i++) {
-        _battleground[(ship.row() + i) * _size + ship.col()] = ship.id();
+void Battlefield::placeShipHorizontal(Ship *ship) {
+    for (uint8_t i = 0; i < ship->size(); i++) {
+        _battleground[ship->row() * _size + ship->col() + i] = ship->id();
     }
-    return true;
+}
+
+void Battlefield::placeShipVertical(Ship *ship) {
+    for (uint8_t i = 0; i < ship->size(); i++) {
+        _battleground[(ship->row() + i) * _size + ship->col()] = ship->id();
+    }
 }
 
 uint8_t *Battlefield::battleground() {
@@ -64,24 +59,14 @@ uint8_t *Battlefield::battleground() {
     return result;
 }
 
-bool Battlefield::shipMatchesHorizontal(Ship &ship) {
-    if (ship.col() + ship.size() > _size) return false;
-    for (uint8_t i = 0; i < ship.size(); i++) {
-        if (_battleground[ship.row() * _size + ship.col() + i]) return false;
+bool Battlefield::shipDoesOverlap(Ship *ship) {
+    for(auto sIdx=0; sIdx < _placedShips; sIdx++) {
+        if(_ships[sIdx]->overlaps(ship)) {
+            return true;
+        }
     }
-    return true;
-}
 
-bool Battlefield::shipMatchesVertical(Ship &ship) {
-    if (ship.row() + ship.size() > _size) return false;
-    if(ship.row())
-    if(ship.col()>0) {
-
-    }
-    for (uint8_t i = 0; i < ship.size(); i++) {
-        if (_battleground[(ship.row() + i) * _size + ship.col()]) return false;
-    }
-    return true;
+    return false;
 }
 
 __inline bool Battlefield::isComplete() const {
@@ -90,25 +75,35 @@ __inline bool Battlefield::isComplete() const {
 
 char *Battlefield::string() {
     auto str = new char[_positions+_size];
-    for(auto row = 0; row < _size; row++) {
-        for(auto col = 0; col < _size; col++) {
-            char shipId = static_cast<char>(_battleground[row*_size+col]);
-            str[row*(_size+1)+col] = _battleground[row*_size+col] ? shipId : '_';
+    memset(str, '_', _positions+_size); // clear
+    for(int i=_size; i<_positions+_size; str[i]='\n',i+=_size+1); // add linebreaks
+    for(auto sIdx = 0; sIdx < _placedShips; sIdx ++) {
+        auto ship = _ships[sIdx];
+        auto points = ship->shipBox();
+        for(auto col = points[0].col; col <= points[1].col; col++) {
+            for(auto row = points[0].row; row <= points[1].row; row++) {
+                str[row * (_size+1) + col] = ship->damageAt(col, row) ? '*' : ship->id();
+            }
         }
-        str[row*(_size+1)+_size] = '\n';
     }
-//    str[_positions] = '\0';
+
     return str;
 }
 
 void Battlefield::setRandomShips() {
-    SRAND();
+    while(!setShip(Ship::create(RAND(_size), RAND(_size), 5, RAND(2) ? HORIZONTAL : VERTICAL, _size)));
+    while(!setShip(Ship::create(RAND(_size), RAND(_size), 4, RAND(2) ? HORIZONTAL : VERTICAL, _size)));
+    while(!setShip(Ship::create(RAND(_size), RAND(_size), 3, RAND(2) ? HORIZONTAL : VERTICAL, _size)));
+    while(!setShip(Ship::create(RAND(_size), RAND(_size), 3, RAND(2) ? HORIZONTAL : VERTICAL, _size)));
+    while(!setShip(Ship::create(RAND(_size), RAND(_size), 2, RAND(2) ? HORIZONTAL : VERTICAL, _size)));
+}
 
-    while(!setShip(*new Ship(RAND(_size), RAND(_size), 5, RAND(2) ? HORIZONTAL : VERTICAL, _size)));
-    while(!setShip(*new Ship(RAND(_size), RAND(_size), 4, RAND(2) ? HORIZONTAL : VERTICAL, _size)));
-    while(!setShip(*new Ship(RAND(_size), RAND(_size), 3, RAND(2) ? HORIZONTAL : VERTICAL, _size)));
-    while(!setShip(*new Ship(RAND(_size), RAND(_size), 3, RAND(2) ? HORIZONTAL : VERTICAL, _size)));
-    while(!setShip(*new Ship(RAND(_size), RAND(_size), 2, RAND(2) ? HORIZONTAL : VERTICAL, _size)));
+bool Battlefield::fireAt(uint8_t col, uint8_t row) {
+    for(auto sIdx = 0; sIdx < _placedShips; sIdx ++) {
+        if(_ships[sIdx]->isHit(row, col)) return true;
+    }
+
+    return false;
 }
 
 

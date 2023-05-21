@@ -35,10 +35,12 @@ public:
     ~Battlefield();
 
     void setRandomShips();
-    bool setShip(Ship &ship);
+    bool setShip(Ship *ship);
 
     uint8_t *battleground();
     bool isComplete() const;
+
+    bool fireAt(uint8_t col, uint8_t row);
 
     char *string();
 
@@ -49,11 +51,10 @@ private:
     const uint8_t _size;
     uint8_t _placedShips;
 
-    bool shipMatchesHorizontal(Ship &ship);
-    bool shipMatchesVertical(Ship &ship);
+    void placeShipHorizontal(Ship *ship);
+    void placeShipVertical(Ship *ship);
 
-    bool placeShipHorizontal(Ship &ship);
-    bool placeShipVertical(Ship &ship);
+    bool shipDoesOverlap(Ship *ship);
 };
 
 #endif

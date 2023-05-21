@@ -4,7 +4,7 @@ project(schiffeversenken)
 SET(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(schiffeversenken main.cpp schiffeversenken/battlefield.cpp schiffeversenken/ship.cpp schiffeversenken/Point.cpp schiffeversenken/Point.h)
+add_executable(schiffeversenken main.cpp schiffeversenken/battlefield.cpp schiffeversenken/ship.cpp schiffeversenken/point.cpp schiffeversenken/point.h)
 
 add_definitions(-DC_LION)
 #include_directories("${CMAKE_CURRENT_LIST_DIR}/include")

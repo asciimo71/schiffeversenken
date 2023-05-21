@@ -34,8 +34,10 @@ private:
 
     void initBoundingBox();
 
-public:
     Ship(uint8_t row, uint8_t col, uint8_t size, Direction direction, uint8_t maxSize);
+
+public:
+    static Ship *create(uint8_t row, uint8_t col, uint8_t size, Direction direction, uint8_t maxSize);
 
     uint8_t id() const;
     void setId(uint8_t id);
@@ -51,6 +53,10 @@ public:
     uint8_t col() const;
 
     bool overlaps(Ship *other);
+
+    Point *shipBox();
+
+    bool damageAt(uint8_t col, uint8_t row);
 };
 
 
