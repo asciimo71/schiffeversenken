@@ -1,13 +1,17 @@
 #ifndef _ship_h
 #define _ship_h
 
+#include "point.h"
+
 #ifdef C_LION
 
 #include <cstdint>
+#include <algorithm>
 
 #else
 
 #include <Arduino.h>
+
 #endif
 
 enum Direction {
@@ -21,12 +25,19 @@ private:
     const uint8_t _row;
     const uint8_t _size;
     const Direction _direction;
+    const uint8_t _maxSize;
     bool destroyed;
     bool *damaged;
     int _id;
+    Point *_boundingBox;
+    Point *_shipBox;
+
+    void initBoundingBox();
+
+    Ship(uint8_t row, uint8_t col, uint8_t size, Direction direction, uint8_t maxSize);
 
 public:
-    Ship(uint8_t row, uint8_t col, uint8_t size, Direction direction);
+    static Ship *create(uint8_t row, uint8_t col, uint8_t size, Direction direction, uint8_t maxSize);
 
     uint8_t id() const;
     void setId(uint8_t id);
@@ -41,6 +52,11 @@ public:
     uint8_t row() const;
     uint8_t col() const;
 
+    bool overlaps(Ship *other);
+
+    Point *shipBox();
+
+    bool damageAt(uint8_t col, uint8_t row);
 };
 
 
