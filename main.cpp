@@ -77,33 +77,82 @@ int main() {
         std::cout << std::endl;
     }
 
-/*
-    bf = Battlefield(12);
-    std::cout << "place ship HORIZONTALLY " << 0 << ", " << 0 << " size 5: (true) == "
-    << bf.setShip(*new Ship(0, 0, 5, HORIZONTAL)) << std::endl << bf.string();
-    std::cout << "place ship HORIZONTALLY " << 0 << ", " << 5 << " size 5: (true) == "
-    << bf.setShip(*new Ship(0, 5, 5, HORIZONTAL)) << std::endl << bf.string();
-    std::cout << "place ship HORIZONTALLY " << 0 << ", " << 6 << " size 5: (false) == "
-    << bf.setShip(*new Ship(0, 6, 5, HORIZONTAL)) << std::endl << bf.string();
-    std::cout << "place ship HORIZONTALLY " << 0 << ", " << 5 << " size 5: (false) == "
-    << bf.setShip(*new Ship(0, 5, 5, HORIZONTAL)) << std::endl << bf.string();
+    {
+        Battlefield bf = Battlefield(12);
+        std::cout << "place ship HORIZONTALLY " << 0 << ", " << 0 << " size 5: (true) == "
+                  << bf.setShip(Ship::create(0, 0, 5, HORIZONTAL, 12)) << std::endl << bf.string();
+        std::cout << "place ship HORIZONTALLY " << 0 << ", " << 6 << " size 5: (true) == "
+                  << bf.setShip(Ship::create(0, 6, 5, HORIZONTAL, 12)) << std::endl << bf.string();
+        std::cout << "place ship HORIZONTALLY " << 2 << ", " << 8 << " size 5: (false) == "
+                  << bf.setShip(Ship::create(2, 8, 5, HORIZONTAL, 12)) << std::endl << bf.string();
+        std::cout << "place ship HORIZONTALLY " << 0 << ", " << 5 << " size 5: (false) == "
+                  << bf.setShip(Ship::create(0, 5, 5, HORIZONTAL, 12)) << std::endl << bf.string();
 
-    std::cout << "place ship VERTICALLY " << 0 << ", " << 0 << " size 5: (false) == "
-    << bf.setShip(*new Ship(0, 0, 5, VERTICAL)) << std::endl << bf.string();
-    std::cout << "place ship VERTICALLY " << 1 << ", " << 0 << " size 5: (true) == "
-    << bf.setShip(*new Ship(1, 0, 5, VERTICAL)) << std::endl << bf.string();
-    std::cout << "place ship VERTICALLY " << 5 << ", " << 2 << " size 5: (true) == "
-    << bf.setShip(*new Ship(5, 2, 5, VERTICAL)) << std::endl << bf.string();
-    std::cout << "place ship VERTICALLY " << 6 << ", " << 1 << " size 4: (true) == "
-    << bf.setShip(*new Ship(6, 1, 4, VERTICAL)) << std::endl << bf.string();
-    std::cout << "place ship VERTICALLY " << 6 << ", " << 3 << " size 2: (false) == "
-    << bf.setShip(*new Ship(6, 3, 2, VERTICAL)) <<
-    " too many ships, complete is true " << bf.isComplete() << std::endl << bf.string();
+        std::cout << "place ship VERTICALLY " << 0 << ", " << 0 << " size 5: (false) == "
+                  << bf.setShip(Ship::create(0, 0, 5, VERTICAL, 12)) << std::endl << bf.string();
+        std::cout << "place ship VERTICALLY " << 2 << ", " << 0 << " size 5: (true) == "
+                  << bf.setShip(Ship::create(2, 0, 5, VERTICAL, 12)) << std::endl << bf.string();
+        std::cout << "place ship VERTICALLY " << 5 << ", " << 2 << " size 5: (true) == "
+                  << bf.setShip(Ship::create(5, 2, 5, VERTICAL, 12)) << std::endl << bf.string();
+        std::cout << "place ship VERTICALLY " << 2 << ", " << 2 << " size 2: (true) == "
+                  << bf.setShip(Ship::create(2, 2, 2, VERTICAL, 12)) << std::endl << bf.string();
+        std::cout << "place ship VERTICALLY " << 6 << ", " << 3 << " size 2: (false) == "
+                  << bf.setShip(Ship::create(6, 3, 2, VERTICAL, 12)) <<
+                  " too many ships, complete is true " << bf.isComplete() << std::endl << bf.string();
 
-    auto area = bf.battleground();
-    for(auto i=0; i<100; i++) {
-        std::cout << (char)(area[i] ? area[i] : '_');
+        auto area = bf.battleground();
+        for (auto i = 0; i < 100; i++) {
+            std::cout << (char) (area[i] ? area[i] : '_');
+        }
     }
-*/
+
+    {
+        Battlefield bf = Battlefield(12);
+
+        for(int col = 0; col < 12; col++) {
+            for(int row = 0; row < 12; row++) {
+                std::cout << bf.setShip(Ship::create(row, col, 2, HORIZONTAL, 12)) << std::endl << bf.string();
+            }
+        }
+
+        for(int col = 0; col < 12; col++) {
+            for(int row = 0; row < 12; row++) {
+                std::cout << bf.setShip(Ship::create(row, col, 2, VERTICAL, 12)) << std::endl << bf.string();
+            }
+        }
+    }
+
+    {
+        Battlefield bf = Battlefield(12);
+
+        for(int col = 0; col < 12; col++) {
+            for(int row = 0; row < 12; row++) {
+                std::cout << bf.setShip(Ship::create(row, col, 2, VERTICAL, 12)) << std::endl << bf.string();
+            }
+        }
+
+        for(int col = 0; col < 12; col++) {
+            for(int row = 0; row < 12; row++) {
+                std::cout << bf.setShip(Ship::create(row, col, 2, HORIZONTAL, 12)) << std::endl << bf.string();
+            }
+        }
+    }
+
+    {
+        Battlefield bf = Battlefield(12);
+
+        bool shipSet;
+        do {
+            shipSet = false;
+            for (int col = 0; col < 12; col++) {
+                for (int row = 0; row < 12; row++) {
+                    auto direction = RAND(2) ? HORIZONTAL : VERTICAL;
+                    shipSet |= bf.setShip(Ship::create(row, col, 5, direction, 12));
+                    std::cout << std::endl << bf.string();
+                }
+            }
+        } while (shipSet);
+    }
+
     return 0;
 }

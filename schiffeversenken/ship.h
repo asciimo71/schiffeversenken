@@ -52,8 +52,22 @@ public:
     uint8_t row() const;
     uint8_t col() const;
 
+    /**
+     * compares, if the other ship's shipbox overlaps this ships bounding box.
+     *
+     * @param other the other ship
+     * @return true, if the shipboxes overlap
+     */
     bool overlaps(Ship *other);
 
+    /**
+     * returns top,left and bottom, right points of ship-box.
+     *
+     * the ship box is the bounding box of the ship + a border of 1. It marks the space that
+     * this ship occupies on the battlefield.
+     *
+     * @return Point[2] [(Top.Left), (Bottom, Right)]
+     */
     Point *shipBox();
 
     bool damageAt(uint8_t col, uint8_t row);
